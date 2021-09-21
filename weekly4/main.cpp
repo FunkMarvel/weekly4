@@ -16,6 +16,12 @@ void populateLevels(vector<vector<vector<char>>>&);
 void task3();
 void diceTask();
 
+struct Person
+{
+	string name{};
+	unsigned int phone_number{};
+};
+
 int main() {
 	//task1();
 	task2();
