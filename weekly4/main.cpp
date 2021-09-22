@@ -3,6 +3,7 @@
 #include <string>
 #include <conio.h>
 #include <random>
+#include <algorithm>
 
 using std::cout; using std::endl;
 using std::cin; using std::vector;
@@ -41,6 +42,7 @@ void populateLevels(vector<vector<vector<char>>>&);
 void task3();
 void diceTask();
 vector<Dice> roll5dice();
+unsigned int countFaces(vector<Dice>&, unsigned int);
 void clearCin();
 
 int main() {
@@ -264,13 +266,31 @@ void task3() {
 }
 
 void diceTask() {
+	vector<Dice> held_rolls{};
+
 	while (true) {
 		vector<Dice> rolls = roll5dice();
+		vector<char> selections{ '1','2','3','4','5' };
+		char roll_to_hold{};
 
 		for (int i = 0; i < rolls.size(); i++) {
 			cout << " Dice nr. " << i+1 << ": " << rolls[i] << endl;
 		}
+		while (true) {
+			cout << " Type the number of the dice you wish to hold or type 'c' to continue: ";
+			cin >> roll_to_hold;
+
+			if (std::binary_search(selections.begin(), selections.end(), roll_to_hold)) {
+				held_rolls.push_back(rolls[roll_to_hold - '0' - 1]);
+				cout << " Dice nr. " << roll_to_hold << " has been saved." << endl;
+			}
+			else if (tolower(roll_to_hold) == 'c' || roll_to_hold == 'H') { break; }
+		}
+		system("cls");
+		if (roll_to_hold == 'H') break;
 	}
+
+	cout << " There are " << countFaces(held_rolls, 6) << " number of 6s among the rolls you held" << endl;
 }
 
 vector<Dice> roll5dice() {
@@ -280,6 +300,15 @@ vector<Dice> roll5dice() {
 	}
 
 	return rolls;
+}
+
+unsigned int countFaces(vector<Dice> &held_rolls, unsigned int face) {
+	unsigned int number_of_faces{};
+	for (int i = 0; i < held_rolls.size(); i++) {
+		if (held_rolls[i].value == face) number_of_faces++;
+	}
+
+	return number_of_faces;
 }
 
 void clearCin() {
