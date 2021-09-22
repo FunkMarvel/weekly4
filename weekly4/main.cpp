@@ -8,6 +8,31 @@ using std::cout; using std::endl;
 using std::cin; using std::vector;
 using std::string; using std::stoi;
 
+struct Person {
+	string name{};
+	unsigned int phone_number{};
+};
+
+struct Dice {
+	unsigned int value{1};
+
+	Dice() { roll(); }
+
+	void roll() {
+		std::random_device rd{};
+		std::mt19937_64 gen(rd());
+		std::uniform_int_distribution<int> face_dist(1, 6);
+		
+		value = face_dist(gen);
+	}
+
+
+	friend std::ostream& operator <<(std::ostream &os, Dice some_dice) {
+		os << some_dice.value;
+		return os;
+	}
+};
+
 void task1();
 void task2();
 void checkBounds(vector<vector<char>>&, vector<int>&);
@@ -15,17 +40,14 @@ void displayBoard(vector<vector<char>>&);
 void populateLevels(vector<vector<vector<char>>>&);
 void task3();
 void diceTask();
+vector<Dice> roll5dice();
 void clearCin();
 
-struct Person {
-	string name{};
-	unsigned int phone_number{};
-};
-
 int main() {
-	/*task1();
-	task2();*/
-	task3();
+	//task1();
+	//task2();
+	//task3();
+	diceTask();
 	return 0;
 }
 
@@ -215,29 +237,49 @@ void task3() {
 
 	while (i < 10) {
 
+		system("cls");
 		cout << " Add a person? y/n: ";
 		cin >> add_more;
-		if (tolower(add_more) == 'n') break;
 
-		Person temp_person{};
+		if (tolower(add_more) == 'n') { break; }
+		else if (tolower(add_more) == 'y') {
+			Person temp_person{};
 
-		cout << " Name: ";
-		clearCin();
-		getline(cin, temp_person.name);
+			cout << " Name: ";
+			clearCin();
+			getline(cin, temp_person.name);
 
-		cout << " Phone number: ";
-		cin >> temp_person.phone_number;
+			cout << " Phone number: ";
+			cin >> temp_person.phone_number;
 
-		people.push_back(temp_person);
-		i++;
+			people.push_back(temp_person);
+			i++;
+		}
 	}
 
+	cout << " Name:\t\tPhone number: " << endl;
 	for (int i = 0; i < people.size(); i++) {
-		cout << " Name: " << people[i].name << " Phone number: " << people[i].phone_number << endl;
+		cout << " " << people[i].name << "\t " << people[i].phone_number << endl;
 	}
 }
 
 void diceTask() {
+	while (true) {
+		vector<Dice> rolls = roll5dice();
+
+		for (int i = 0; i < rolls.size(); i++) {
+			cout << " Dice nr. " << i+1 << ": " << rolls[i] << endl;
+		}
+	}
+}
+
+vector<Dice> roll5dice() {
+	vector<Dice> rolls{};
+	for (int i = 0; i < 5; i++) {
+		rolls.push_back(Dice());
+	}
+
+	return rolls;
 }
 
 void clearCin() {
