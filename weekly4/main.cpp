@@ -17,8 +17,7 @@ void task3();
 void diceTask();
 void clearCin();
 
-struct Person
-{
+struct Person {
 	string name{};
 	unsigned int phone_number{};
 };
@@ -51,18 +50,15 @@ void task1() {
 	system("cls");
 
 
-	while (!valid_selec)
-	{
-		for (int i = 0; i < operations[0].size(); i++)
-		{
+	while (!valid_selec) {
+		for (int i = 0; i < operations[0].size(); i++) {
 			cout << " " << i + 1 << ". " << operations[0][i] << endl;
 		}
 		cout << " Choose an operation: ";
 		cin >> operation; cout << endl;
 		system("cls");
 
-		switch (tolower(operation))
-		{
+		switch (tolower(operation)) {
 		case '1': case 'a':
 			result = a + b;
 			valid_selec = true;
@@ -87,31 +83,29 @@ void task1() {
 		}
 		system("cls");
 	}
-	
+
 	cout << a << " " << operations[1][idx] << " " << b
 		<< " = " << result << endl;
 	system("pause");
 }
 
-void task2()
-{
+void task2() {
 	int n{ 10 };
 	char free_space{ '.' };
 	int current_level{};
 
-	vector<vector<vector<char>>> levels(4, vector<vector<char>> (n, vector<char>(n, free_space)));
+	vector<vector<vector<char>>> levels(4, vector<vector<char>>(n, vector<char>(n, free_space)));
 	populateLevels(levels);
-	
-	vector<vector<char>> board(n, vector<char> (n, free_space));
+
+	vector<vector<char>> board(n, vector<char>(n, free_space));
 	copy(levels[current_level].begin(), levels[current_level].end(), board.begin());
-	
+
 	board[0][0] = '@';
 	displayBoard(board);
 
 	vector<int> position(2, 0);
 
-	while (true)
-	{
+	while (true) {
 		vector<int> old_pos = position;
 		board[position[1]][position[0]] = free_space;
 		char input{};
@@ -134,8 +128,7 @@ void task2()
 		}
 		checkBounds(board, position);
 
-		switch (board[position[1]][position[0]])
-		{
+		switch (board[position[1]][position[0]]) {
 		case 'G':
 			exit(0);
 			break;
@@ -163,19 +156,16 @@ void checkBounds(vector<vector<char>> &board, vector<int> &position) {
 	else if (position[1] == board.size()) position[1] = 0;
 }
 
-void displayBoard(vector<vector<char>> &board)
-{
-	for (int i = 0; i < board.size(); i++)
-	{
-		for (int j = 0; j < board[0].size(); j++)
-		{
+void displayBoard(vector<vector<char>>& board) {
+	for (int i = 0; i < board.size(); i++) {
+		for (int j = 0; j < board[0].size(); j++) {
 			cout << " " << board[i][j];
 		}
 		cout << endl;
 	}
 }
 
-void populateLevels(vector<vector<vector<char>>> &levels) {
+void populateLevels(vector<vector<vector<char>>>& levels) {
 	std::random_device rd{};
 	std::mt19937_64 gen(rd());
 	std::uniform_real_distribution<double> RNG(0, 1);
@@ -186,28 +176,22 @@ void populateLevels(vector<vector<vector<char>>> &levels) {
 	double wheight{ 0.95 };
 	double draw{};
 
-	for (int i = 0; i < levels.size(); i++)
-	{
+	for (int i = 0; i < levels.size(); i++) {
 		stair_down_placed = false;
 		stair_up_placed = false;
 
-		for (int j = 1; j < levels[0].size() - 1; j++)
-		{
-			for (int k = 1; k < levels[0][0].size() - 1; k++)
-			{
+		for (int j = 1; j < levels[0].size() - 1; j++) {
+			for (int k = 1; k < levels[0][0].size() - 1; k++) {
 				draw = RNG(gen);
-				if (!exit_placed && draw > 0.99)
-				{
+				if (!exit_placed && draw > 0.99) {
 					levels[i][j][k] = 'G';
 					exit_placed = true;
 				}
-				if (levels[i][j][k] != 'G' && !stair_down_placed && i != levels.size()-1 && draw < 1-wheight)
-				{
+				if (levels[i][j][k] != 'G' && !stair_down_placed && i != levels.size() - 1 && draw < 1 - wheight) {
 					levels[i][j][k] = '/';
 					stair_down_placed = true;
 				}
-				if (levels[i][j][k] != 'G' && !stair_up_placed && i != 0 && draw >= wheight)
-				{
+				if (levels[i][j][k] != 'G' && !stair_up_placed && i != 0 && draw >= wheight) {
 					levels[i][j][k] = '\\';
 					stair_up_placed = true;
 				}
@@ -221,46 +205,42 @@ void populateLevels(vector<vector<vector<char>>> &levels) {
 		if (!stair_up_placed && i != 0) levels[i][levels[0].size() - 2][levels[0][0].size() - 2] = '\\';
 	}
 
-	if (!exit_placed) levels[levels.size()-1][0][0] = 'G';
+	if (!exit_placed) levels[levels.size() - 1][0][0] = 'G';
 }
 
-void task3()
-{
+void task3() {
 	int i{};
 	char add_more{ 'y' };
 	vector<Person> people{};
 
 	while (i < 10) {
-		
+
 		cout << " Add a person? y/n: ";
 		cin >> add_more;
 		if (tolower(add_more) == 'n') break;
 
 		Person temp_person{};
-		
+
 		cout << " Name: ";
 		clearCin();
 		getline(cin, temp_person.name);
 
 		cout << " Phone number: ";
 		cin >> temp_person.phone_number;
-		
+
 		people.push_back(temp_person);
 		i++;
 	}
 
-	for (int i = 0; i < people.size(); i++)
-	{
+	for (int i = 0; i < people.size(); i++) {
 		cout << " Name: " << people[i].name << " Phone number: " << people[i].phone_number << endl;
 	}
 }
 
-void diceTask()
-{
+void diceTask() {
 }
 
-void clearCin()
-{
+void clearCin() {
 	// Function that clears cin buffer.
 	// Courtesy of Johannes Skjeltorp-Borgaas.
 
