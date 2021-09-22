@@ -15,6 +15,7 @@ void displayBoard(vector<vector<char>>&);
 void populateLevels(vector<vector<vector<char>>>&);
 void task3();
 void diceTask();
+void clearCin();
 
 struct Person
 {
@@ -23,8 +24,9 @@ struct Person
 };
 
 int main() {
-	//task1();
-	task2();
+	/*task1();
+	task2();*/
+	task3();
 	return 0;
 }
 
@@ -44,7 +46,7 @@ void task1() {
 	cin >> a; cout << endl;
 	system("cls");
 
-	cout << "Input second number: ";
+	cout << " Input second number: ";
 	cin >> b; cout << endl;
 	system("cls");
 
@@ -224,9 +226,44 @@ void populateLevels(vector<vector<vector<char>>> &levels) {
 
 void task3()
 {
+	int i{};
+	char add_more{ 'y' };
+	vector<Person> people{};
+
+	while (i < 10) {
+		
+		cout << " Add a person? y/n: ";
+		cin >> add_more;
+		if (tolower(add_more) == 'n') break;
+
+		Person temp_person{};
+		
+		cout << " Name: ";
+		clearCin();
+		getline(cin, temp_person.name);
+
+		cout << " Phone number: ";
+		cin >> temp_person.phone_number;
+		
+		people.push_back(temp_person);
+		i++;
+	}
+
+	for (int i = 0; i < people.size(); i++)
+	{
+		cout << " Name: " << people[i].name << " Phone number: " << people[i].phone_number << endl;
+	}
 }
 
 void diceTask()
 {
 }
 
+void clearCin()
+{
+	// Function that clears cin buffer.
+	// Courtesy of Johannes Skjeltorp-Borgaas.
+
+	std::cin.clear();
+	std::cin.ignore(32767, '\n');
+}
