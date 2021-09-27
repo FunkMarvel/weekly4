@@ -54,10 +54,37 @@ vector<vector<Dice>> findPair(vector<Dice>&);
 void clearCin();
 
 int main() {
-	//task1();
-	//task2();
-	//task3();
-	diceTask();
+	while (true) {
+		char answer{};
+		system("cls");
+
+		for (int i = 1; i < 5; i++) {
+			if (i != 4) { cout << " Task " << i << ". " << endl; }
+			else { cout << " Dice task." << endl; }
+		}
+		cout << " Type number of task, 'd' for dice task, or 'q' to quit: ";
+		cin >> answer;
+
+		switch (tolower(answer)) {
+		case '1':
+			task1();
+			break;
+		case '2':
+			task2();
+			break;
+		case '3':
+			task3();
+			break;
+		case '4': case 'd':
+			diceTask();
+			break;
+		case 'q':
+			return 0;
+		default:
+			break;
+		}
+		system("pause");
+	}
 	return 0;
 }
 
