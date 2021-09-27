@@ -27,6 +27,13 @@ struct Dice {
 		value = face_dist(gen);
 	}
 
+	inline bool operator ==(Dice some_dice) {
+		return value == some_dice.value;
+	}
+
+	inline bool operator ==(int some_value) {
+		return value == some_value;
+	}
 
 	friend std::ostream& operator <<(std::ostream &os, Dice some_dice) {
 		os << some_dice.value;
@@ -43,6 +50,7 @@ void task3();
 void diceTask();
 vector<Dice> roll5dice();
 unsigned int countFaces(vector<Dice>&, unsigned int);
+vector<vector<Dice>> findPair(vector<Dice>&);
 void clearCin();
 
 int main() {
@@ -277,20 +285,25 @@ void diceTask() {
 			cout << " Dice nr. " << i+1 << ": " << rolls[i] << endl;
 		}
 		while (true) {
-			cout << " Type the number of the dice you wish to hold or type 'c' to continue: ";
+			cout << " Type the number of the dice you wish to hold, type 'c' to roll again, or type 'H' to stop: ";
 			cin >> roll_to_hold;
 
 			if (std::binary_search(selections.begin(), selections.end(), roll_to_hold)) {
 				held_rolls.push_back(rolls[roll_to_hold - '0' - 1]);
 				cout << " Dice nr. " << roll_to_hold << " has been saved." << endl;
 			}
-			else if (tolower(roll_to_hold) == 'c' || roll_to_hold == 'H') { break; }
+			else if (tolower(roll_to_hold) == 'c' || roll_to_hold == 'H' || rolls.size() - held_rolls.size() == 0) { break; }
 		}
 		system("cls");
-		if (roll_to_hold == 'H') break;
+		if (roll_to_hold == 'H' || rolls.size() - held_rolls.size() == 0) break;
 	}
 
 	cout << " There are " << countFaces(held_rolls, 6) << " number of 6s among the rolls you held" << endl;
+
+	vector<vector<Dice>> pairs = findPair(held_rolls);
+	for (int i = 0; i < pairs.size(); i++) {
+		cout << " Pair nr. " << i + 1 << " is " << pairs[i][0] << " and " << pairs[i][1] << endl;
+	}
 }
 
 vector<Dice> roll5dice() {
@@ -305,10 +318,29 @@ vector<Dice> roll5dice() {
 unsigned int countFaces(vector<Dice> &held_rolls, unsigned int face) {
 	unsigned int number_of_faces{};
 	for (int i = 0; i < held_rolls.size(); i++) {
-		if (held_rolls[i].value == face) number_of_faces++;
+		if (held_rolls[i] == face) number_of_faces++;
 	}
 
 	return number_of_faces;
+}
+
+vector<vector<Dice>> findPair(vector<Dice> &held_rolls) {
+	vector<Dice> rolls(held_rolls.size(), Dice());
+	std::copy(held_rolls.begin(), held_rolls.end(), rolls.begin());
+
+	vector<vector<Dice>> pairs{};
+	for (int i = 0; i < rolls.size(); i++) {
+		for (int j = i + 1; j < rolls.size(); j += 2) {
+			if (rolls[i] == rolls[j]) {
+				vector<Dice> temp{ rolls[i], rolls[j] };
+				rolls.erase(rolls.begin() + j);
+				pairs.push_back(temp);
+				break;
+			}
+		}
+	}
+
+	return pairs;
 }
 
 void clearCin() {
